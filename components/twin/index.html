@@ -1,0 +1,159 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  @font-face { font-family: 'KhetNoto'; src: url('./NotoSansDevanagari.ttf') format('truetype'); font-display: swap; }
+  :root {
+    --ink: #13231a; --muted: #5b6a60; --glass: rgba(255, 255, 255, 0.82); --glass-dark: rgba(14, 33, 22, 0.78);
+    --line: rgba(19, 35, 26, 0.12); --accent: #1d4a2c; --gold: #d99a1e; --radius: 14px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: transparent; font-family: 'KhetNoto', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif; color: var(--ink); }
+  #app { position: relative; width: 100%; border-radius: 20px; overflow: hidden; background: #0f2418;
+         box-shadow: 0 18px 50px rgba(15, 36, 24, 0.28); }
+  #stage { position: relative; width: 100%; height: 600px; }
+  canvas#gl { display: block; width: 100%; height: 100%; cursor: grab; touch-action: none; }
+  canvas#gl:active { cursor: grabbing; }
+
+  .card { position: absolute; background: var(--glass); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+          border: 1px solid rgba(255,255,255,0.6); border-radius: var(--radius); box-shadow: 0 6px 24px rgba(0,0,0,0.12); }
+  #when { top: 14px; left: 14px; padding: 12px 16px; min-width: 210px; }
+  #when .date { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; }
+  #when .sub { font-size: 13px; color: var(--muted); margin-top: 3px; }
+  #when .wx { display: flex; align-items: center; gap: 8px; margin-top: 8px; font-size: 14px; font-weight: 600; }
+  #when .bar { height: 5px; background: rgba(0,0,0,0.08); border-radius: 3px; margin-top: 10px; overflow: hidden; }
+  #when .bar i { display: block; height: 100%; background: linear-gradient(90deg, #3c8d4f, #d99a1e); width: 0; }
+
+  #kpis { top: 14px; right: 14px; padding: 10px 12px; display: grid; grid-template-columns: repeat(3, auto); gap: 4px 18px; }
+  .kpi .k { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; }
+  .kpi .v { font-size: 20px; font-weight: 800; letter-spacing: -0.01em; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .kpi .v small { font-size: 12px; font-weight: 600; color: var(--muted); }
+  .kpi .v.down { color: #b0412a; }
+
+  #crops { top: 92px; right: 14px; width: 232px; padding: 6px 12px; max-height: calc(100% - 330px); overflow: auto; }
+  .crop { padding: 8px 0; border-bottom: 1px solid var(--line); }
+  .crop:last-child { border-bottom: 0; }
+  .crop .top { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; }
+  .crop .dot { width: 12px; height: 12px; border-radius: 4px; flex: none; }
+  .crop .share { margin-left: auto; font-weight: 600; color: var(--muted); font-size: 13px; }
+  .crop .stage { display: flex; justify-content: space-between; font-size: 12.5px; color: var(--muted); margin: 4px 0 4px 20px; }
+  .crop .stage b { color: var(--ink); font-weight: 600; }
+  .crop .g { height: 6px; margin-left: 20px; background: rgba(0,0,0,0.07); border-radius: 3px; overflow: hidden; }
+  .crop .g i { display: block; height: 100%; border-radius: 3px; transition: width .15s linear; }
+  .crop .hl { margin-left: 20px; font-size: 12px; color: #b0412a; font-weight: 700; margin-top: 3px; }
+
+  #toasts { position: absolute; left: 50%; bottom: 104px; transform: translateX(-50%); display: flex; flex-direction: column; gap: 6px; align-items: center; pointer-events: none; }
+  .toast { background: var(--glass-dark); color: #fff; padding: 8px 16px; border-radius: 999px; font-size: 14px; font-weight: 600;
+           box-shadow: 0 6px 18px rgba(0,0,0,0.25); animation: pop 3.2s ease forwards; white-space: nowrap; }
+  @keyframes pop { 0% { opacity: 0; transform: translateY(-8px) scale(.96); } 10% { opacity: 1; transform: none; } 80% { opacity: 1; } 100% { opacity: 0; transform: translateY(-6px); } }
+
+  #labels { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+  .chip { position: absolute; transform: translate(-50%, -100%); background: rgba(255,255,255,0.92); border-radius: 999px; padding: 4px 10px 4px 6px;
+          font-size: 12.5px; font-weight: 700; display: flex; align-items: center; gap: 6px; white-space: nowrap; box-shadow: 0 4px 14px rgba(0,0,0,0.18); }
+  .chip .sw { width: 10px; height: 10px; border-radius: 50%; }
+  .chip small { font-weight: 600; color: var(--muted); }
+  .chip.dim { background: rgba(14,33,22,0.78); color: #fff; }
+  .chip.dim small { color: #cfe0d3; }
+
+  #tip { position: absolute; pointer-events: none; background: var(--glass-dark); color: #fff; padding: 8px 12px; border-radius: 10px;
+         font-size: 13px; display: none; transform: translate(12px, 12px); line-height: 1.35; }
+
+  #controls { left: 14px; right: 14px; bottom: 14px; padding: 8px 14px; display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; }
+  .btn { border: 0; background: #fff; color: var(--ink); width: 40px; height: 40px; border-radius: 12px; font-size: 16px; cursor: pointer;
+         display: grid; place-items: center; box-shadow: 0 1px 0 rgba(0,0,0,0.08), inset 0 0 0 1px var(--line); }
+  .btn:hover { background: #f3f6f2; }
+  .btn.play { width: 52px; height: 52px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 20px; box-shadow: 0 6px 16px rgba(29,74,44,0.35); }
+  .btn.play:hover { background: #255d38; }
+  .speed { display: flex; background: #fff; border-radius: 12px; padding: 3px; box-shadow: inset 0 0 0 1px var(--line); }
+  .speed button { border: 0; background: transparent; padding: 7px 9px; border-radius: 9px; font-size: 13px; font-weight: 700; color: var(--muted); cursor: pointer; }
+  .speed button.on { background: var(--accent); color: #fff; }
+  .scrub { flex: 1 1 200px; position: relative; padding-top: 14px; min-width: 120px; }
+  .scrub input { width: 100%; accent-color: var(--accent); height: 22px; margin: 0; cursor: pointer; }
+  .ticks { position: absolute; left: 8px; right: 8px; top: 0; height: 12px; }
+  .ticks span { position: absolute; width: 8px; height: 8px; border-radius: 50%; transform: translateX(-50%); border: 2px solid #fff; }
+  .months { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); padding: 0 4px; }
+  #cambar { left: 14px; top: 50%; transform: translateY(-50%); padding: 6px; display: flex; flex-direction: column; gap: 6px; }
+
+  #mini { right: 14px; bottom: 92px; padding: 8px 10px; width: 232px; }
+  #mini canvas { height: 70px !important; }
+  #mini .t { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; display: flex; justify-content: space-between; }
+  #mini canvas { width: 100%; height: 86px; display: block; }
+  .legend span { white-space: nowrap; }
+  .legend { display: flex; flex-wrap: wrap; gap: 2px 10px; font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .legend i { display: inline-block; width: 10px; height: 3px; vertical-align: middle; margin-right: 4px; border-radius: 2px; }
+
+  #intro { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; }
+  #intro div { background: var(--glass-dark); color: #fff; padding: 14px 22px; border-radius: 16px; font-size: 17px; font-weight: 700;
+               box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-align: center; transition: opacity .6s; }
+  #intro small { display: block; font-weight: 500; opacity: .8; font-size: 13px; margin-top: 4px; }
+
+  /* phone / narrow */
+  @media (max-width: 760px) {
+    #stage { height: 470px; }
+    #when { padding: 8px 12px; min-width: 0; } #when .date { font-size: 19px; }
+    #kpis { top: auto; bottom: 138px; right: 10px; left: 10px; grid-template-columns: repeat(3, 1fr); padding: 8px 10px; }
+    .kpi { min-width: 0; } .kpi .k { white-space: normal; font-size: 10px; letter-spacing: 0.02em; line-height: 1.2; }
+    .kpi .v { font-size: 15px; white-space: normal; } .kpi .v small { font-size: 10px; }
+    #kpis { gap: 4px 10px; }
+    #crops { position: relative; top: auto; right: auto; width: auto; max-height: none; margin: 10px; }
+    #mini { display: none; }
+    #controls { left: 8px; right: 8px; bottom: 8px; gap: 6px; padding: 8px; flex-wrap: wrap; justify-content: center; }
+    .scrub { flex: 1 1 100%; order: 9; }
+    #cambar { display: none; }
+    #toasts { bottom: auto; top: 96px; }
+    .speed button { padding: 6px 6px; }
+    .btn { width: 36px; height: 36px; } .btn.play { width: 46px; height: 46px; }
+    .chip { font-size: 11px; }
+  }
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="stage">
+    <canvas id="gl"></canvas>
+    <div id="labels"></div>
+    <div id="when" class="card">
+      <div class="date" id="date">—</div>
+      <div class="sub" id="weekline">—</div>
+      <div class="wx" id="wx"></div>
+      <div class="bar"><i id="progress"></i></div>
+    </div>
+    <div id="kpis" class="card">
+      <div class="kpi"><div class="k" id="k_sales"></div><div class="v" id="v_sales">—</div></div>
+      <div class="kpi"><div class="k" id="k_water"></div><div class="v" id="v_water">—</div></div>
+      <div class="kpi"><div class="k" id="k_labour"></div><div class="v" id="v_labour">—</div></div>
+    </div>
+    <div id="mini" class="card hidden">
+      <div class="t"><span id="mini_t"></span><span id="mini_v"></span></div>
+      <canvas id="minic" width="560" height="160"></canvas>
+      <div class="legend" id="mini_leg"></div>
+    </div>
+    <div id="toasts"></div>
+    <div id="controls" class="card hidden">
+      <button class="btn" id="b_restart" title="Restart">⏮</button>
+      <button class="btn" id="b_back" title="Previous week">◀</button>
+      <button class="btn play" id="b_play" title="Play">▶</button>
+      <button class="btn" id="b_fwd" title="Next week">▶</button>
+      <div class="speed" id="speed"></div>
+      <div class="scrub">
+        <div class="ticks" id="ticks"></div>
+        <input type="range" id="scrub" min="0" max="10" step="0.01" value="0" aria-label="Week">
+        <div class="months" id="months"></div>
+      </div>
+    </div>
+    <div id="cambar" class="card">
+      <button class="btn" id="b_orbit" title="Auto-rotate">⟳</button>
+      <button class="btn" id="b_top" title="Top view">▦</button>
+      <button class="btn" id="b_home" title="Reset view">⌂</button>
+    </div>
+    <div id="tip"></div>
+    <div id="intro" class="hidden"><div id="introText"></div></div>
+  </div>
+  <div id="crops" class="card hidden"></div>
+</div>
+<script type="module" src="./twin.js"></script>
+</body>
+</html>

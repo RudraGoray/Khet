@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>KhetPlan · Your farm, simulated</title>
+<!-- KhetPlan landing page. Served by Streamlit as the "khetplan_landing" component (see khetplan/landing_view.py).
+     The 3D farm reuses the dashboard twin's kit: twin/farmkit.js and twin/vendor/ (Three.js r170). -->
+<link rel="stylesheet" href="./landing/landing.css">
+</head>
+<body>
+<a class="skip" href="#how">Skip to how it works</a>
+<canvas id="farm" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav" id="nav">
+  <a class="brand" href="#home" aria-label="KhetPlan home">
+    <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="12" fill="#143D2B"/>
+      <path d="M20 31V18" stroke="#DDE8D5" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M20 21c0-5 3.5-8.5 9-9 0 5.5-3.5 9-9 9Z" fill="#7fb36f"/>
+      <path d="M20 24c0-4.4-3-7.6-7.8-8 0 4.8 3 8 7.8 8Z" fill="#C7A67A"/></svg>
+    <span>KhetPlan</span>
+  </a>
+  <nav class="links" aria-label="Main">
+    <a href="#home" data-nav="home">Home</a>
+    <a href="#how" data-nav="how">How It Works</a>
+    <a href="#features" data-nav="features">Features</a>
+  </nav>
+  <a class="btn btn-solid btn-sm nav-cta" href="/app" data-launch>Launch KhetPlan</a>
+  <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="menu"><span></span><span></span></button>
+</header>
+<div class="menu" id="menu" hidden>
+  <nav aria-label="Mobile">
+    <a href="#home">Home</a>
+    <a href="#how">How It Works</a>
+    <a href="#features">Features</a>
+    <a href="/app" data-launch class="menu-cta">Launch KhetPlan →</a>
+  </nav>
+  <p class="menu-note">Prototype · synthetic demonstration data for Buldhana district, Maharashtra</p>
+</div>
+
+<!-- Streamlit gives component frames scrolling="no", so the page scrolls inside this container instead of the frame. -->
+<div id="scroller" tabindex="-1">
+<main>
+  <!-- 1 · HERO -->
+  <section class="hero" id="home" data-scene="hero">
+    <div class="pin">
+      <div class="hero-copy">
+        <p class="eyebrow load" style="--d:0"><span class="dot"></span>Farm digital twin · prototype</p>
+        <h1 class="hero-title" aria-label="Your Farm. Your Future. Simulated.">
+          <span class="line"><span class="load" style="--d:1">Your Farm.</span></span>
+          <span class="line"><span class="load" style="--d:2">Your Future.</span></span>
+          <span class="line"><em class="load" style="--d:3">Simulated.</em></span>
+        </h1>
+        <p class="hero-sub load" style="--d:4">Turn your land, water, and crop choices into an interactive farm simulation. Explore planting strategies, test what-if scenarios, and understand your season before it begins.</p>
+        <div class="cta-row load" style="--d:5">
+          <a class="btn btn-solid" href="/app" data-launch>Explore My Farm <span class="arr">→</span></a>
+          <a class="btn btn-ghost" href="#how">See How It Works</a>
+        </div>
+      </div>
+      <div class="hero-meta load" style="--d:6">
+        <div class="meta-chip"><b id="hm-acres">2 acres</b><span>Buldhana · Kharif</span></div>
+        <div class="meta-chip"><b id="hm-crops">3 crops</b><span>planned in 20 strips</span></div>
+        <div class="meta-chip"><b id="hm-weeks">36 weeks</b><span>one season, simulated</span></div>
+      </div>
+      <p class="hint load" style="--d:7"><span class="mouse" aria-hidden="true"></span>Scroll to fly in · move to look around</p>
+    </div>
+  </section>
+
+  <!-- 2 · HOW IT WORKS -->
+  <section class="story" id="how" data-scene="story">
+    <div class="story-head">
+      <p class="eyebrow">How it works</p>
+      <h2 class="display reveal-lines">Don't Just Plan Your Farm. <em>See It Come Alive.</em></h2>
+    </div>
+    <div class="story-grid">
+      <ol class="steps">
+        <li class="step" data-step="0">
+          <span class="step-n">01</span>
+          <h3>Tell Us About Your Farm</h3>
+          <p>Enter or speak your plot size, season, water availability, and preferences. Hindi, Marathi and English all work, and you check every field before anything is planned.</p>
+        </li>
+        <li class="step" data-step="1">
+          <span class="step-n">02</span>
+          <h3>Build Your Crop Plan</h3>
+          <p>Get a crop allocation, planting calendar, and explanation of the choices. Every plan is checked against the rules for area, season, crop pairs and water by a separate validator.</p>
+        </li>
+        <li class="step" data-step="2">
+          <span class="step-n">03</span>
+          <h3>Watch Your Season Unfold</h3>
+          <p>Visualize crop growth, water use, harvests, and financial outcomes on your digital twin, week by week, from sowing to the last harvest.</p>
+        </li>
+      </ol>
+      <div class="stage-wrap">
+        <div class="stage" id="storyStage" aria-hidden="true">
+          <!-- visual 1: voice -->
+          <div class="vis vis-voice" data-vis="0">
+            <div class="vv-top"><span class="vv-mic"><i></i></span><div class="wave" id="wave"></div></div>
+            <p class="vv-text"><span id="vvText"></span><span class="caret"></span></p>
+            <div class="vv-lang" id="vvLang"></div>
+            <div class="vv-fields" id="vvFields"></div>
+          </div>
+          <!-- visual 2: plan -->
+          <div class="vis vis-plan" data-vis="1">
+            <div class="vp-head"><b>Crop plan</b><span class="ok">✓ checked against every rule</span></div>
+            <div class="strips" id="vpStrips"></div>
+            <div class="vp-legend" id="vpLegend"></div>
+            <div class="vp-cal" id="vpCal"></div>
+          </div>
+          <!-- visual 3: season -->
+          <div class="vis vis-season" data-vis="2">
+            <div class="vs-head"><b>Season on the twin</b><span id="vsWeek">Week 1</span></div>
+            <svg class="vs-chart" id="vsChart" viewBox="0 0 400 200" preserveAspectRatio="none"></svg>
+            <div class="vs-legend"><span><i class="lg-sales"></i>Cumulative sales</span><span><i class="lg-water"></i>Weekly water</span></div>
+            <div class="vs-crops" id="vsCrops"></div>
+          </div>
+        </div>
+        <div class="stage-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · SEASON SHOWCASE (pinned over the 3D farm) -->
+  <section class="season" id="season" data-scene="season">
+    <div class="pin">
+      <div class="season-head">
+        <p class="eyebrow light">The digital twin</p>
+        <h2 class="display light reveal-lines">A Whole Growing Season. <em>Right Before Your Eyes.</em></h2>
+      </div>
+      <div class="season-card">
+        <div class="sc-date"><b id="scDate">20 Jun 2027</b><span id="scWeek">Week 1 of 36</span></div>
+        <div class="sc-stage" id="scStage">Sowing</div>
+        <ul class="sc-crops" id="scCrops"></ul>
+        <div class="sc-sales"><span>Sales so far</span><b id="scSales">₹0</b></div>
+      </div>
+      <div class="timeline">
+        <div class="tl-track"><i id="tlFill"></i></div>
+        <ol class="tl-marks" id="tlMarks"></ol>
+        <p class="tl-main" id="tlMain"></p>
+      </div>
+      <p class="season-note" id="seasonNote">Sample plan computed by KhetPlan · synthetic demonstration data</p>
+    </div>
+  </section>
+
+  <!-- 4 · WHAT IF -->
+  <section class="whatif" id="whatif" data-scene="whatif">
+    <div class="wi-panel">
+      <p class="eyebrow">Scenario lab</p>
+      <h2 class="display reveal-lines">What If You Could See the Risk <em>Before It Happens?</em></h2>
+      <p class="lede">Pick a shock. The 3D farm changes the way the app's twin shows it, and the numbers are the twin's own result for the sample plan.</p>
+      <div class="wi-cards" role="tablist" aria-label="Scenarios">
+        <button class="wi-card" role="tab" aria-selected="false" data-kind="dry_spell"><span class="wi-ic">☀️</span><b>Dry Spell</b><small>3 weeks without rain from week 8</small></button>
+        <button class="wi-card" role="tab" aria-selected="false" data-kind="pest"><span class="wi-ic">🐛</span><b>Pest Attack</b><small id="wiPestSub">On the largest crop from week 6</small></button>
+        <button class="wi-card" role="tab" aria-selected="false" data-kind="water_cut"><span class="wi-ic">🚱</span><b>Water Shortage</b><small>Well runs dry: rain only from week 4</small></button>
+        <button class="wi-card" role="tab" aria-selected="false" data-kind="price"><span class="wi-ic">📉</span><b>Market Price Change</b><small>Prices 25% lower from week 20</small></button>
+      </div>
+      <div class="wi-result" id="wiResult" aria-live="polite">
+        <p class="wi-empty">Choose a scenario to replay the season.</p>
+      </div>
+      <p class="fine">Shock responses are simple prototype rules, not crop science. Run any scenario on your own farm inside the app.</p>
+    </div>
+  </section>
+
+  <!-- 5 · FEATURES -->
+  <section class="features" id="features">
+    <div class="feat-head">
+      <p class="eyebrow">Features</p>
+      <h2 class="display reveal-lines">Designed Around <em>Real Farming Decisions.</em></h2>
+    </div>
+
+    <article class="feat feat-voice">
+      <div class="fv-words" aria-hidden="true">
+        <span class="w w1" data-parallax="-0.08">खेत</span>
+        <span class="w w2" data-parallax="0.05">शेत</span>
+        <span class="w w3" data-parallax="-0.03">Farm</span>
+      </div>
+      <div class="feat-copy reveal-up">
+        <span class="tag">01 · Voice input</span>
+        <h3>Speak in Hindi, Marathi or English.</h3>
+        <p>Press Speak and describe your farm the way you would to a neighbour. KhetPlan reads the district, plot size, season, water and risk, shows you exactly what it heard, and waits for your confirmation. Typing works too.</p>
+      </div>
+    </article>
+
+    <article class="feat feat-plan">
+      <figure class="shot reveal-mask" data-parallax="0.06">
+        <img src="./landing/img/twin-dry-spell.jpg" alt="The KhetPlan dashboard: the plan card on the left and the 3D field during a dry spell on the right" loading="lazy">
+        <figcaption>Real screenshot of the dashboard</figcaption>
+      </figure>
+      <div class="feat-copy reveal-up">
+        <span class="tag">02 · Crop planning &nbsp;·&nbsp; 03 · 3D growth</span>
+        <h3>A plan you can watch grow.</h3>
+        <p>An optimiser (OR-Tools CP-SAT) splits the plot into 20 strips and picks two or three compatible crops for your season and water. The plan is planted on a to-scale 3D field that grows, flowers and is harvested week by week, with sales, water and labour alongside.</p>
+        <ul class="ticks"><li>Allocation, calendar and plain-language reasons</li><li>Every plan re-checked by an independent validator</li><li>Play, pause, scrub and orbit the season</li></ul>
+      </div>
+    </article>
+
+    <div class="bento">
+      <article class="tile tile-whatif reveal-up">
+        <span class="tag">04 · What-if experiments</span>
+        <h3>Break the season on purpose.</h3>
+        <p>Dry spells, pests, price changes and water cuts are replayed on your own plan. When the water runs short, KhetPlan can re-plan for what is left.</p>
+        <div class="impact" id="wiImpact"></div>
+        <div class="chips"><span>☀️ Dry spell</span><span>🐛 Pest</span><span>🚱 Water cut</span><span>📉 Price</span></div>
+      </article>
+      <article class="tile tile-risk reveal-up" id="riskTile">
+        <span class="tag">05 · Risk comparison</span>
+        <h3>Mixed crops vs. one crop, 1,000 seasons.</h3>
+        <div class="risk" id="riskBox"></div>
+        <p class="fine" id="riskNote">Illustrative simulation with synthetic data, not a forecast.</p>
+      </article>
+      <article class="tile tile-report reveal-up">
+        <div class="paper" aria-hidden="true">
+          <i class="p-h"></i><i></i><i class="s"></i><i></i><div class="p-bars"><b></b><b></b><b></b></div><i></i><i class="s"></i>
+        </div>
+        <div>
+          <span class="tag">06 · Farm reports</span>
+          <h3>One printable page.</h3>
+          <p>Download a one-page A4 summary in English, हिन्दी or मराठी, plus the plan as data.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- 6 · FINAL CTA -->
+  <section class="final" id="start" data-scene="final">
+    <div class="final-inner">
+      <h2 class="mega reveal-lines">Your Next Harvest Starts With a <em>Better Plan.</em></h2>
+      <p class="final-sub reveal-up">Explore possibilities, understand trade-offs, and bring your farm plan to life.</p>
+      <a class="btn btn-solid btn-xl reveal-up" href="/app" data-launch>Launch KhetPlan <span class="arr">→</span></a>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <div class="foot-row">
+      <a class="brand light" href="#home"><span>KhetPlan</span></a>
+      <nav aria-label="Footer"><a href="#home">Home</a><a href="#how">How It Works</a><a href="#features">Features</a><a href="/app" data-launch>Launch</a></nav>
+    </div>
+    <p class="disclaimer">KhetPlan is an interactive planning and simulation <b>prototype</b>. Crop numbers are synthetic demonstration values for Buldhana district, Maharashtra (kharif and rabi), dataset <span id="dsv">v1.1.0</span>. It does not provide weather forecasts, live market prices or agronomic advice. Do not use it for real planting decisions.</p>
+    <p class="credits">3D: Three.js (MIT) · Type: Fraunces, Inter, Noto Sans Devanagari (SIL OFL)</p>
+  </footer>
+</main>
+</div>
+
+<div class="curtain" id="curtain" aria-hidden="true"><span>Opening your farm…</span></div>
+<script type="module" src="./landing/landing.js"></script>
+</body>
+</html>

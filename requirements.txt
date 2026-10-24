@@ -1,0 +1,7 @@
+# Versions used for the verified run (Python 3.13.17, Linux). Python 3.11+ required.
+streamlit==1.66.1
+ortools==9.15.6755
+numpy==2.5.4
+pandas==3.1.0
+plotly==7.1.0
+pytest==9.1.1

@@ -1,0 +1,103 @@
+{
+  "dataset_version": "1.1.0",
+  "inputs": {
+    "region": "buldhana",
+    "area_value": 1.5,
+    "area_unit": "acre",
+    "season": "kharif",
+    "year": 2027,
+    "water": "assured",
+    "risk": 50,
+    "excluded_crops": [],
+    "budget_rs": null,
+    "acres": 1.5
+  },
+  "status": "OPTIMAL",
+  "allocations": [
+    {
+      "crop": "pigeonpea",
+      "strips": 9,
+      "share": 0.45,
+      "acres": 0.675,
+      "sow": "2027-06-20",
+      "harvest_start": "2027-12-07",
+      "harvest_end": "2027-12-27"
+    },
+    {
+      "crop": "greengram",
+      "strips": 8,
+      "share": 0.4,
+      "acres": 0.6,
+      "sow": "2027-06-20",
+      "harvest_start": "2027-08-24",
+      "harvest_end": "2027-09-02"
+    },
+    {
+      "crop": "cotton",
+      "strips": 3,
+      "share": 0.15,
+      "acres": 0.225,
+      "sow": "2027-06-20",
+      "harvest_start": "2027-12-07",
+      "harvest_end": "2028-02-04"
+    }
+  ],
+  "strip_order": [
+    "pigeonpea",
+    "greengram",
+    "cotton",
+    "pigeonpea",
+    "greengram",
+    "pigeonpea",
+    "greengram",
+    "pigeonpea",
+    "greengram",
+    "cotton",
+    "pigeonpea",
+    "greengram",
+    "pigeonpea",
+    "greengram",
+    "pigeonpea",
+    "greengram",
+    "cotton",
+    "pigeonpea",
+    "greengram",
+    "pigeonpea"
+  ],
+  "irrigation_mm": {
+    "used": 11.25,
+    "limit": 300.0
+  },
+  "direct_cost_rs": 22350.0,
+  "violations": [],
+  "note": "Synthetic demonstration data. Illustrative simulation, not a forecast.",
+  "comparison": {
+    "seasons": 1000,
+    "seed": 2027,
+    "baseline_crop": "cotton",
+    "mixed": {
+      "mean_gross": 40899.522035522656,
+      "mean_net": 18549.522035522663,
+      "sd_net": 12829.09454491379,
+      "cv_net": 0.691613213555899,
+      "p10_net": 3496.3293683297397,
+      "p10_gross": 25846.32936832974,
+      "prob_loss": 0.054,
+      "mean_zero_income_months": 7.278,
+      "cost": 22350.0
+    },
+    "single": {
+      "mean_gross": 63753.83093203954,
+      "mean_net": 21753.830932039553,
+      "sd_net": 29434.11256529725,
+      "cv_net": 1.3530542117961393,
+      "p10_net": -6877.230182672957,
+      "p10_gross": 35122.76981732704,
+      "prob_loss": 0.178,
+      "mean_zero_income_months": 9.174,
+      "cost": 42000.0
+    },
+    "share_mixed_better": 0.467,
+    "mean_diff_net": -3204.3088965168904
+  }
+}

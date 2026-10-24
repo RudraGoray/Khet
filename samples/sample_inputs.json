@@ -1,0 +1,23 @@
+{
+  "note": "Example transcripts for demos and tests. Typed text, not recorded speech.",
+  "examples": [
+    {"lang": "hi", "label": "बुलढाणा, 2.5 एकड़, खरीफ, बारिश पर",
+     "text": "मेरे पास बुलढाणा में ढाई एकड़ खेत है, खरीफ में बोना है, सिंचाई नहीं है, कम जोखिम चाहिए",
+     "expected": {"region": "buldhana", "area_value": 2.5, "area_unit": "acre", "season": "kharif", "water": "rainfed", "risk": 80}},
+    {"lang": "hi", "label": "बुलढाणा, 30 गुंठा, रबी, कुआं",
+     "text": "बुलढाणा जिले में तीस गुंठा जमीन, रबी का मौसम, कुआं है, संतुलित",
+     "expected": {"region": "buldhana", "area_value": 30, "area_unit": "guntha", "season": "rabi", "water": "limited", "risk": 50}},
+    {"lang": "mr", "label": "बुलढाणा, 2 एकर, खरीप, विहीर",
+     "text": "बुलढाणा जिल्ह्यात माझी दोन एकर शेती आहे, खरीप हंगाम, विहीर आहे, कमी जोखीम",
+     "expected": {"region": "buldhana", "area_value": 2, "area_unit": "acre", "season": "kharif", "water": "limited", "risk": 80}},
+    {"lang": "mr", "label": "बुलढाणा, साडे तीन एकर, रब्बी, बोअरवेल",
+     "text": "बुलढाणा, साडे तीन एकर, रब्बी, बोअरवेल आहे, जास्त नफा हवा",
+     "expected": {"region": "buldhana", "area_value": 3.5, "area_unit": "acre", "season": "rabi", "water": "assured", "risk": 20}},
+    {"lang": "en", "label": "Buldhana, 1.5 acres, kharif, borewell",
+     "text": "I have one and a half acres in Buldhana for kharif 2027 with a borewell, balanced risk",
+     "expected": {"region": "buldhana", "area_value": 1.5, "area_unit": "acre", "season": "kharif", "water": "assured", "risk": 50, "year": 2027}},
+    {"lang": "en", "label": "Unsupported: Pune, bigha, summer",
+     "text": "5 bigha in Pune for summer",
+     "expected": {}}
+  ]
+}

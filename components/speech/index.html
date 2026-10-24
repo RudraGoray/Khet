@@ -1,0 +1,88 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+  body { margin:0; font-family: system-ui, 'Noto Sans Devanagari', sans-serif; color:#1f2a22; }
+  .row { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  button { font-size:18px; min-height:56px; padding:0 22px; border-radius:28px; border:0; cursor:pointer;
+           background:#1d4a2c; color:#fff; font-weight:600; }
+  button.stop { background:#fff; color:#1d4a2c; border:2px solid #1d4a2c; }
+  button:disabled { opacity:.45; cursor:not-allowed; }
+  #status { font-size:16px; padding:6px 2px; min-height:24px; }
+  .live { color:#b4441f; font-weight:600; }
+  .dot { display:inline-block; width:10px; height:10px; border-radius:50%; background:#b4441f; margin-right:6px;
+         animation: pulse 1s infinite; }
+  @keyframes pulse { 50% { opacity:.25; } }
+</style></head>
+<body>
+<div class="row">
+  <button id="start" aria-label="Start speaking">🎙 <span id="startLabel">Speak</span></button>
+  <button id="stop" class="stop" disabled aria-label="Stop">■ <span id="stopLabel">Stop</span></button>
+</div>
+<div id="status" role="status" aria-live="polite"></div>
+<script>
+// Minimal Streamlit component protocol (no build step needed).
+const send = (type, data) => window.parent.postMessage(Object.assign({isStreamlitMessage: true, type}, data), "*");
+const setValue = (value) => send("streamlit:setComponentValue", {value, dataType: "json"});
+let args = {lang: "en-IN", labels: {}}, rec = null, finalText = "", seq = 0, watchdog = null;
+const $ = (id) => document.getElementById(id);
+
+window.addEventListener("message", (event) => {
+  if (event.data.type !== "streamlit:render") return;
+  args = event.data.args;
+  $("startLabel").textContent = args.labels.start || "Speak";
+  $("stopLabel").textContent = args.labels.stop || "Stop";
+  if (!$("status").dataset.touched) $("status").textContent = args.labels.ready || "";
+});
+send("streamlit:componentReady", {apiVersion: 1});
+send("streamlit:setFrameHeight", {height: 100});
+
+function status(text, live) {
+  $("status").dataset.touched = "1";
+  $("status").innerHTML = live ? '<span class="dot"></span><span class="live"></span>' : "<span></span>";
+  $("status").lastChild.textContent = text;
+}
+function fail(code) {
+  clearTimeout(watchdog);
+  if (rec) { try { rec.abort(); } catch (e) {} rec = null; }
+  status(args.labels.error || "Microphone problem", false);
+  setValue({kind: "error", error: code, seq: ++seq});
+  $("start").disabled = false; $("stop").disabled = true;
+}
+
+$("start").onclick = () => {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) { fail("unsupported-browser"); return; }
+  if (!window.isSecureContext) { fail("needs-https-or-localhost"); return; }
+  try {
+    rec = new SR();
+    rec.lang = args.lang; rec.interimResults = true; rec.continuous = true; rec.maxAlternatives = 1;
+    finalText = "";
+    status(args.labels.starting || "…", false);
+    $("start").disabled = true;
+    // Some browsers expose the API but never start (no microphone, no speech service): give up clearly.
+    watchdog = setTimeout(() => fail("no-response"), 6000);
+    rec.onstart = () => { clearTimeout(watchdog); status(args.labels.listening || "Listening…", true); $("start").disabled = true; $("stop").disabled = false; };
+    rec.onresult = (e) => {
+      let interim = "";
+      for (let i = e.resultIndex; i < e.results.length; i++) {
+        if (e.results[i].isFinal) finalText += e.results[i][0].transcript + " ";
+        else interim += e.results[i][0].transcript;
+      }
+      status((finalText + interim).trim(), true);
+    };
+    rec.onerror = (e) => fail(e.error || "unknown");
+    rec.onend = () => {
+      clearTimeout(watchdog);
+      if (!rec) return;  // already handled by fail()
+      rec = null;
+      $("start").disabled = false; $("stop").disabled = true;
+      const text = finalText.trim();
+      if (text) { status(args.labels.done || "Done", false); setValue({kind: "transcript", text, seq: ++seq}); }
+      else if (!$("status").textContent.includes(":")) status(args.labels.nothing || "Nothing heard", false);
+    };
+    rec.start();
+  } catch (err) { fail(err.name || "start-failed"); }
+};
+$("stop").onclick = () => { if (rec) rec.stop(); };
+</script>
+</body></html>

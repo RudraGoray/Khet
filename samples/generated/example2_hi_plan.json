@@ -1,0 +1,103 @@
+{
+  "dataset_version": "1.1.0",
+  "inputs": {
+    "region": "buldhana",
+    "area_value": 30.0,
+    "area_unit": "guntha",
+    "season": "rabi",
+    "year": 2027,
+    "water": "limited",
+    "risk": 50,
+    "excluded_crops": [],
+    "budget_rs": null,
+    "acres": 0.75
+  },
+  "status": "OPTIMAL",
+  "allocations": [
+    {
+      "crop": "chickpea",
+      "strips": 9,
+      "share": 0.45,
+      "acres": 0.3375,
+      "sow": "2027-10-15",
+      "harvest_start": "2028-02-02",
+      "harvest_end": "2028-02-15"
+    },
+    {
+      "crop": "mustard",
+      "strips": 8,
+      "share": 0.4,
+      "acres": 0.3,
+      "sow": "2027-10-15",
+      "harvest_start": "2028-02-12",
+      "harvest_end": "2028-02-25"
+    },
+    {
+      "crop": "wheat",
+      "strips": 3,
+      "share": 0.15,
+      "acres": 0.1125,
+      "sow": "2027-11-01",
+      "harvest_start": "2028-02-29",
+      "harvest_end": "2028-03-13"
+    }
+  ],
+  "strip_order": [
+    "chickpea",
+    "mustard",
+    "chickpea",
+    "wheat",
+    "mustard",
+    "chickpea",
+    "mustard",
+    "chickpea",
+    "mustard",
+    "chickpea",
+    "wheat",
+    "mustard",
+    "chickpea",
+    "mustard",
+    "chickpea",
+    "mustard",
+    "chickpea",
+    "wheat",
+    "mustard",
+    "chickpea"
+  ],
+  "irrigation_mm": {
+    "used": 75.0,
+    "limit": 75.0
+  },
+  "direct_cost_rs": 11775.0,
+  "violations": [],
+  "note": "Synthetic demonstration data. Illustrative simulation, not a forecast.",
+  "comparison": {
+    "seasons": 1000,
+    "seed": 2027,
+    "baseline_crop": "chickpea",
+    "mixed": {
+      "mean_gross": 19887.39755058103,
+      "mean_net": 8112.39755058103,
+      "sd_net": 5795.147557199521,
+      "cv_net": 0.7143569482470022,
+      "p10_net": 1031.6788364494491,
+      "p10_gross": 12806.67883644945,
+      "prob_loss": 0.075,
+      "mean_zero_income_months": 10.04,
+      "cost": 11775.0
+    },
+    "single": {
+      "mean_gross": 21523.367728414454,
+      "mean_net": 9523.367728414454,
+      "sd_net": 9674.458381630595,
+      "cv_net": 1.015865254553317,
+      "p10_net": -459.78326838779844,
+      "p10_gross": 11540.216731612201,
+      "prob_loss": 0.114,
+      "mean_zero_income_months": 11.055,
+      "cost": 12000.0
+    },
+    "share_mixed_better": 0.388,
+    "mean_diff_net": -1410.9701778334224
+  }
+}

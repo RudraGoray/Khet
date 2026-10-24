@@ -1,0 +1,33 @@
+{
+  "dataset": "KhetPlan demonstration crop dataset",
+  "version": "1.1.0",
+  "released": "2026-10-24",
+  "coverage": {
+    "regions": {"buldhana": "Buldhana district, Maharashtra, India"},
+    "seasons": ["kharif", "rabi"],
+    "not_covered": "Every other district or state, the summer (zaid) season, perennial crops, and multi-season crops."
+  },
+  "status": "SYNTHETIC DEMONSTRATION DATA. Not for real planting decisions.",
+  "assumption_codes": {
+    "A1": "Authored prototype assumption. A plausible-looking synthetic value chosen for demonstration. Not measured, not taken from a market series, and not reviewed by an agronomist.",
+    "A2": "Reported by an earlier prototype from a named public page. That page was not reachable from this build environment, so the value is unverified and treated as an assumption."
+  },
+  "fields": {
+    "sow_start / sow_end": "MM-DD sowing window (A1). The plan sows on sow_start of the chosen season year.",
+    "duration_days": "Days from sowing to start of harvest (A1).",
+    "harvest_days": "Length of harvest window in days; revenue is spread evenly over it (A1).",
+    "irrigation_mm": "Seasonal irrigation depth needed beyond rainfall, in mm (A1). 0 means grown on rainfall or residual moisture.",
+    "crop_water_mm": "Total seasonal crop water use (rain + irrigation), in mm (A1). Used only by the digital twin's weekly water view.",
+    "labor_days_per_acre": "Person-days of work per acre over the season (A1). Used only by the digital twin's weekly labour view.",
+    "yield_q_per_acre": "Expected yield in quintals per acre in a normal season (A1).",
+    "price_rs_per_q": "Assumed farm-gate price in INR per quintal (A1). NOT an observed market price.",
+    "cost_rs_per_acre": "Assumed direct cash cost per acre: seed, fertilizer, plant protection, hired labour (A1). Excludes family labour, land rent and interest.",
+    "yield_cv / price_cv": "Coefficient of variation used by the simulation (A1).",
+    "drought_sensitivity": "Share of a weather-state severity that reduces this crop's yield (A1).",
+    "failure_prob": "Per-season chance of near-total crop loss from pests, disease or other causes (A1).",
+    "min_share / max_share": "Allowed fraction of the plot if the crop is selected (A1)."
+  },
+  "sources": [],
+  "sources_note": "No external source was consulted and verified for this version. The water-level mapping (rainfed 0 mm, limited 75 mm, assured 300 mm) is also A1.",
+  "expert_review": "None."
+}

@@ -1,0 +1,94 @@
+{
+  "dataset_version": "1.1.0",
+  "inputs": {
+    "region": "buldhana",
+    "area_value": 2.5,
+    "area_unit": "acre",
+    "season": "kharif",
+    "year": 2027,
+    "water": "rainfed",
+    "risk": 80,
+    "excluded_crops": [],
+    "budget_rs": null,
+    "acres": 2.5
+  },
+  "status": "OPTIMAL",
+  "allocations": [
+    {
+      "crop": "sesame",
+      "strips": 12,
+      "share": 0.6,
+      "acres": 1.5,
+      "sow": "2027-06-20",
+      "harvest_start": "2027-09-13",
+      "harvest_end": "2027-09-22"
+    },
+    {
+      "crop": "pigeonpea",
+      "strips": 8,
+      "share": 0.4,
+      "acres": 1.0,
+      "sow": "2027-06-20",
+      "harvest_start": "2027-12-07",
+      "harvest_end": "2027-12-27"
+    }
+  ],
+  "strip_order": [
+    "sesame",
+    "pigeonpea",
+    "sesame",
+    "pigeonpea",
+    "sesame",
+    "sesame",
+    "pigeonpea",
+    "sesame",
+    "pigeonpea",
+    "sesame",
+    "sesame",
+    "pigeonpea",
+    "sesame",
+    "pigeonpea",
+    "sesame",
+    "sesame",
+    "pigeonpea",
+    "sesame",
+    "pigeonpea",
+    "sesame"
+  ],
+  "irrigation_mm": {
+    "used": 0.0,
+    "limit": 0.0
+  },
+  "direct_cost_rs": 27500.0,
+  "violations": [],
+  "note": "Synthetic demonstration data. Illustrative simulation, not a forecast.",
+  "comparison": {
+    "seasons": 1000,
+    "seed": 2027,
+    "baseline_crop": "pigeonpea",
+    "mixed": {
+      "mean_gross": 57865.47957547961,
+      "mean_net": 30365.479575479603,
+      "sd_net": 22593.30305174377,
+      "cv_net": 0.7440456520893569,
+      "p10_net": 2550.1687274096353,
+      "p10_gross": 30050.168727409637,
+      "prob_loss": 0.086,
+      "mean_zero_income_months": 10.154,
+      "cost": 27500.0
+    },
+    "single": {
+      "mean_gross": 71098.1706660802,
+      "mean_net": 36098.17066608022,
+      "sd_net": 32846.24335586012,
+      "cv_net": 0.90991434606752,
+      "p10_net": 2647.653333946291,
+      "p10_gross": 37647.65333394629,
+      "prob_loss": 0.082,
+      "mean_zero_income_months": 11.054,
+      "cost": 35000.0
+    },
+    "share_mixed_better": 0.395,
+    "mean_diff_net": -5732.691090600617
+  }
+}

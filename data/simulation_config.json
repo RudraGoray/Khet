@@ -1,0 +1,16 @@
+{
+  "version": "1.0.0",
+  "basis": "A1: every parameter here is a synthetic prototype assumption, not fitted to observed weather or market data.",
+  "seasons": 1000,
+  "seed": 2027,
+  "weather_states": [
+    {"id": "normal", "probability": 0.60, "severity": 0.0},
+    {"id": "dry_spell", "probability": 0.25, "severity": 0.3},
+    {"id": "drought", "probability": 0.15, "severity": 0.6}
+  ],
+  "market_price_cv": 0.08,
+  "strips": 20,
+  "max_crops": 3,
+  "water_levels_mm": {"rainfed": 0, "limited": 75, "assured": 300},
+  "harvest_spread_bonus": 0.10
+}

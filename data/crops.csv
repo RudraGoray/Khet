@@ -1,0 +1,16 @@
+id,name_en,name_hi,name_mr,region,season,status,exclusion_reason,sow_start,sow_end,duration_days,harvest_days,irrigation_mm,crop_water_mm,labor_days_per_acre,yield_q_per_acre,price_rs_per_q,cost_rs_per_acre,yield_cv,price_cv,drought_sensitivity,failure_prob,min_share,max_share,value_basis
+soybean,Soybean,सोयाबीन,सोयाबीन,buldhana,kharif,enabled,,06-20,07-10,100,14,0,450,22,7.0,4500,18000,0.25,0.15,0.6,0.05,0.15,0.85,A1
+pigeonpea,Pigeonpea (tur),अरहर (तुअर),तूर,buldhana,kharif,enabled,,06-20,07-10,170,21,0,650,25,4.5,7000,14000,0.30,0.20,0.3,0.05,0.15,0.85,A1
+greengram,Green gram (moong),मूंग,मूग,buldhana,kharif,enabled,,06-20,07-10,65,10,0,300,16,3.0,8000,11000,0.35,0.20,0.5,0.08,0.15,0.85,A1
+blackgram,Black gram (urad),उड़द,उडीद,buldhana,kharif,enabled,,06-20,07-10,75,10,0,320,17,3.0,7000,11000,0.35,0.20,0.5,0.08,0.15,0.85,A1
+cotton,Cotton,कपास,कापूस,buldhana,kharif,enabled,,06-20,07-10,170,60,75,700,45,7.0,7000,28000,0.30,0.15,0.5,0.06,0.15,0.85,A1
+sorghum,Sorghum (kharif jowar),ज्वार (खरीफ),ज्वारी (खरीप),buldhana,kharif,enabled,,06-20,07-10,110,14,0,450,18,8.0,3000,12000,0.25,0.15,0.35,0.05,0.15,0.85,A1
+sesame,Sesame (til),तिल,तीळ,buldhana,kharif,enabled,,06-20,07-10,85,10,0,350,15,2.0,12000,9000,0.35,0.25,0.5,0.10,0.15,0.85,A1
+chickpea,Chickpea (gram),चना,हरभरा,buldhana,rabi,enabled,,10-15,11-10,110,14,0,300,18,6.0,5500,16000,0.30,0.15,0.5,0.06,0.15,0.85,A1
+wheat,Wheat,गेहूं,गहू,buldhana,rabi,enabled,,11-01,11-25,120,14,300,450,22,12.0,2400,22000,0.20,0.10,0.3,0.04,0.15,0.85,A1
+safflower,Safflower,कुसुम,करडई,buldhana,rabi,enabled,,10-01,10-25,130,14,0,350,14,4.0,6000,11000,0.30,0.20,0.3,0.06,0.15,0.85,A1
+rabi_sorghum,Sorghum (rabi jowar),ज्वार (रबी),ज्वारी (रब्बी),buldhana,rabi,enabled,,09-25,10-20,115,14,0,350,16,6.0,3200,12000,0.30,0.15,0.4,0.05,0.15,0.85,A1
+linseed,Linseed,अलसी,जवस,buldhana,rabi,enabled,,10-15,11-10,125,14,50,300,14,3.0,6000,10000,0.35,0.20,0.4,0.08,0.15,0.85,A1
+mustard,Mustard,सरसों,मोहरी,buldhana,rabi,enabled,,10-15,11-05,120,14,75,330,18,5.0,5500,13000,0.30,0.20,0.4,0.06,0.15,0.85,A1
+sugarcane,Sugarcane,गन्ना,ऊस,buldhana,kharif,excluded,Multi-season crop; outside the single-season scope of this prototype,,,,,,,,,,,,,,,,,
+onion,Onion (kharif),प्याज़,कांदा,buldhana,kharif,excluded,No intercrop compatibility coverage prepared in this dataset,,,,,,,,,,,,,,,,,

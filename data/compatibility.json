@@ -1,0 +1,28 @@
+{
+  "version": "1.0.0",
+  "scope": "Every pair of crops selected for one plot must appear in supported_pairs. Pairs not listed are treated as unsupported because the dataset has no coverage for them, not because they are known to be incompatible.",
+  "supported_pairs": {
+    "kharif": [
+      ["pigeonpea", "sorghum"],
+      ["pigeonpea", "greengram"],
+      ["pigeonpea", "blackgram"],
+      ["pigeonpea", "soybean"],
+      ["pigeonpea", "sesame"],
+      ["cotton", "greengram"],
+      ["cotton", "soybean"],
+      ["cotton", "pigeonpea"]
+    ],
+    "rabi": [
+      ["chickpea", "safflower"],
+      ["chickpea", "linseed"],
+      ["chickpea", "mustard"],
+      ["wheat", "mustard"],
+      ["wheat", "chickpea"],
+      ["rabi_sorghum", "safflower"]
+    ]
+  },
+  "basis": {
+    "kharif": "A2: The supplied earlier prototype reported these kharif pairs from a KVK Buldhana district-profile page (https://kvkbuldhana.pdkv.ac.in/?page_id=105). That page could not be reached from this build environment, so the list is UNVERIFIED here and is used as a prototype assumption.",
+    "rabi": "A1: Authored prototype assumption. Not sourced and not reviewed by an agronomist."
+  }
+}
